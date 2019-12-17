@@ -1,0 +1,88 @@
+{% extends "imdb/layout.html" %}
+
+{% block content %}
+
+<h2> {{ movie.title }} </h2>
+<hr>
+<div class="row">
+    <div class="col-lg-3">
+        <img src= {{ movie.image }} alt="movie">
+    </div>
+    <div class="col-lg-5">
+      <iframe width="380" height="268"
+      src="{{ movie.trailer }}">
+      </iframe>
+    </div>
+    <div class="col-lg-3">
+      <br><br>
+      <h5>Info</h5>
+      <p>length: {{ movie.length }} min.</p>
+      <p>publication date: {{ movie.pub_date }}</p>
+      <p>rating: {{avg}}</p>
+    </div>
+</div>
+<hr>
+<h3>About</h3>
+<p>{{ movie.description }}</p>
+<hr>
+
+<h4>Actors</h4>
+{% for actor in actors %}
+    <a href="{% url 'actor' actor.id %}">{{ actor.first_name }} {{ actor.last_name}}</a><small> , </small>
+{% endfor %}
+
+<hr>
+
+<h3>Reviews</h3>
+<form class="form-horizontal" action="{% url 'addreview' movie.title %}" method="post">{% csrf_token %}
+    <label for="review_title">Name:</label>
+        <input class="form-control" id="review_title" type="text" name="title" maxlength="100" required>
+    <label for="review_description">Description:</label>
+        <textarea class="form-control" name="description" id="review_description"></textarea>
+    <label for="review_rating">Rating:</label>
+        <input type="number" class="form-control" id="review_rating" name="rating" min="0" max="100" required>
+    <br></br>
+   <input class="btn btn-dark" type="Submit" value="Submit"/>
+</form>
+
+<hr>
+
+{% for review in movie.review_set.all|dictsortreversed:"creation_date" %}
+<div class="card border-dark mb-3">
+  <div class="card-header">{{ review.title }}</div>
+  <div class="card-body text-dark">
+    <p>Rating: {{ review.rating }} / 100</p>
+    <p class="card-text">{{ review.description }}</p>
+    <span class="badge badge-warning">Review date: {{ review.creation_date }}</span>
+  </div>
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#MyModal{{review.id}}"></button>
+</div>
+
+<div id="MyModal{{review.id}}" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form class="form-horizontal" action="{% url 'addcomment' movie.title review.id %}" method="post">{% csrf_token %}
+          <label for="comment_username">Name:</label>
+              <input class="form-control" id="comment_username" type="text" name="username" maxlength="100" required>
+          <label for="comment_description">Description:</label>
+              <textarea class="form-control" name="description" id="comment_description"></textarea>
+          <br></br>
+         <input class="btn btn-dark" type="Submit" value="Submit"/>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% for comment in review.comment_set.all|dictsortreversed:"creation_date" %}
+  {% if review == comment.review %}
+  <div class="card text-white bg-primary mb-3" style="max-width: 25rem;">
+    <div class="card-header">{{ comment.username }} <span class="badge badge-primary">Commented: {{ comment.creation_date }}</span></div>
+    <div class="card-body">
+      <p class="card-text">{{ comment.description }}</p>
+    </div>
+  </div>
+  {% endif %}
+{% endfor %}
+
+{% endfor %}
+{% endblock %}

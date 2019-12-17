@@ -1,0 +1,26 @@
+{% extends "imdb/layout.html" %}
+
+{% block content %}
+
+<h1>{{ watchlist.name }}</h1>
+<hr>
+
+<p>{{ watchlist.description }}</p>
+
+<form class="form-horizontal" action="{% url 'addtowatchlist' watchlist.id %}" method="post">{% csrf_token %}
+  {{movie_towatchlist.as_p}}
+  <input class="btn btn-warning" type="Submit" value="Submit"/>
+</form>
+
+{% for movie in movies %}
+<br>
+<div class="card">
+  <h5 class="card-header">{{ movie.title }}</h5>
+  <div class="card-body">
+    <p class="card-text">{{ movie.description }}</p>
+    <a href="{% url 'movie' movie.title %}" class="btn btn-dark">Go to movie</a>
+  </div>
+</div>
+{% endfor %}
+
+{% endblock %}

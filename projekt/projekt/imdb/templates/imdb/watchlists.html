@@ -1,0 +1,30 @@
+{% extends "imdb/layout.html" %}
+
+{% block content %}
+
+{% for list in watchlists %}
+<div class="col mb-4">
+  <div class="card">
+    <h5 class="card-header">{{ list.name }}</h5>
+    <div class="card-body">
+      <p class="card-text">{{ list.description }}</p>
+      <a href="{% url 'watchlist' list.id %}" class="btn btn-primary">See</a>
+      <a href="{% url 'deletewatchlist' list.id %}" class="btn btn-danger">Delete</a>
+    </div>
+  </div>
+</div>
+<br>
+{% endfor %}
+
+<div class="col mb-4">
+  <form class="form-horizontal" action="{% url 'addwatchlist' %}" method="post">{% csrf_token %}
+      <label for="list_name">Name:</label>
+          <input class="form-control" id="list_name" type="text" name="name" maxlength="100" required>
+      <label for="list_description">Description:</label>
+          <textarea class="form-control" name="description" id="list_description" required></textarea>
+          <br>
+     <input class="btn btn-dark" type="Submit" value="Create"/>
+  </form>
+</div>
+
+{% endblock %}

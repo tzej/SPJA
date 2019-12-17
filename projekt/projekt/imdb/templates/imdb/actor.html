@@ -1,0 +1,20 @@
+{% extends "imdb/layout.html" %}
+
+{% block content %}
+
+<h3>{{ actr.first_name }} {{ actr.last_name }}</h3>
+  <img src= {{ actr.image }} alt="movie">
+<br></br>
+  <small>Age: {{ actr.age }}</small>
+<br></br>
+  <h4>About</h4>
+  <p> {{ actr.about }}</p>
+  <h3>Movies</h3>
+<hr>
+{% for movie in movies %}
+<ul>
+  <li><a href="{% url 'movie' movie.title %}"> {{ movie.title }}</a></li>
+</ul>
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "imdb/layout.html" %}
+
+{% block content %}
+
+<h2>Movies</h2>
+<hr>
+
+<form method="get">
+  <label for="filter">Search: </label>
+      <input class="form-control" id="filter" type="text" name="title">
+      <br>
+    <button type="submit" class="btn btn-warning btn-sm">Search</button>
+</form>
+
+
+
+<hr>
+{% for movie in filter.qs %}
+<div class="card">
+  <h5 class="card-header">{{ movie.title }}</h5>
+  <div class="card-body">
+    <p class="card-text">{{ movie.description }}</p>
+    <a href="{% url 'movie' movie.title %}" class="btn btn-dark">Go to movie</a>
+  </div>
+</div>
+<br>
+{% endfor %}
+
+{% endblock %}

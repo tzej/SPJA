@@ -1,0 +1,31 @@
+{% extends "imdb/layout.html" %}
+
+{% block content %}
+
+<h2>Actors</h2>
+<hr>
+
+<form method="get">
+  <label for="actor_filter">Search: </label>
+      <input class="form-control" id="actor_filter" type="text" name="last_name">
+      <br>
+    <button type="submit" class="btn btn-warning btn-sm">Search</button>
+</form>
+
+<br>
+
+<div class="row primary">
+{% for actor in actor_filter.qs %}
+<div class="col-sm-6 col-md-4">
+  <div class="thumbnail">
+    <img src="{{actor.image}}" alt="{{actor.last_name}}">
+    <div class="caption">
+      <h3>{{ actor.first_name }} {{ actor.last_name }}</h3>
+      <p><a href="{% url 'actor' actor.id %}" class="btn btn-dark" role="button">See actor</a></p>
+    </div>
+  </div>
+</div>
+{% endfor %}
+</div>
+
+{% endblock %}
